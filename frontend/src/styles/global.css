@@ -1,0 +1,150 @@
+:root {
+    /* Reference Palette (Approximated from Tailwind Slate/Indigo) */
+    --primary: #6366f1;
+    /* Indigo 500 */
+    --primary-hover: #4f46e5;
+    /* Indigo 600 */
+    --secondary: #ec4899;
+    /* Pink 500 */
+
+    --background: #f8fafc;
+    /* Slate 50 */
+    --surface: #ffffff;
+
+    --text-main: #0f172a;
+    /* Slate 900 */
+    --text-muted: #64748b;
+    /* Slate 500 */
+    --border: #e2e8f0;
+    /* Slate 200 */
+
+    --success: #10b981;
+    --error: #ef4444;
+
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--text-main);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+#app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+    outline: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+    background-color: white;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background-color: #F9FAFB;
+}
+
+.input-group {
+    margin-bottom: 1rem;
+}
+
+.input-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+.input-field {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.input-field:focus {
+    border-color: var(--primary);
+    outline: 2px solid #E0E7FF;
+}
+
+.card {
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.text-red {
+    color: var(--error);
+}

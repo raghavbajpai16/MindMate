@@ -1,0 +1,188 @@
+/* Header */
+.header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary);
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+/* Chat Interface */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 140px);
+    background: var(--surface);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.messages-area {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.message-bubble {
+    max-width: 80%;
+    padding: 1rem;
+    border-radius: 1rem;
+    line-height: 1.5;
+    position: relative;
+}
+
+.message-user {
+    align-self: flex-end;
+    background-color: var(--primary);
+    color: white;
+    border-bottom-right-radius: 0.25rem;
+}
+
+.message-ai {
+    align-self: flex-start;
+    background-color: #F3F4F6;
+    color: var(--text-main);
+    border-bottom-left-radius: 0.25rem;
+}
+
+.message-time {
+    font-size: 0.7rem;
+    margin-top: 0.25rem;
+    opacity: 0.7;
+    text-align: right;
+}
+
+.chat-input-area {
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 1rem;
+    background: white;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    resize: none;
+    height: 50px;
+}
+
+/* Mood Emojis */
+.mood-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.mood-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 1rem;
+    background: white;
+    transition: all 0.2s;
+}
+
+.mood-btn:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.mood-btn.selected {
+    border-color: var(--primary);
+    background-color: #EEF2FF;
+}
+
+.emoji {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.mood-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* Chart */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+/* Loading Spinner */
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.crisis-alert {
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #991B1B;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.helpline-list {
+    margin-top: 0.5rem;
+    list-style: none;
+}
