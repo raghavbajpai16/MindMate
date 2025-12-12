@@ -15,9 +15,12 @@ load_dotenv()
 app = FastAPI(title="MindMate API", description="AI Mental Wellness Backend")
 
 # CORS
+# CORS
+origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, specify frontend URL
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

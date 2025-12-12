@@ -6,13 +6,27 @@ from datetime import datetime
 
 load_dotenv()
 
+import json
+
 # Initialize Firebase
 # Try to load from service account file first (local dev), then env vars (deployment)
 cred = None
-if os.path.exists(os.getenv("FIREBASE_KEY_PATH", "firebase-key.json")):
+
+# Check for full JSON in env var (Railway/Render friendly)
+if os.getenv("FIREBASE_CREDENTIALS_JSON"):
+    try:
+        json_str = os.getenv("FIREBASE_CREDENTIALS_JSON")
+        cred_dict = json.loads(json_str)
+        cred = credentials.Certificate(cred_dict)
+    except Exception as e:
+        print(f"❌ Error loading FIREBASE_CREDENTIALS_JSON: {e}")
+
+# Fallback to file if no JSON env var
+if not cred and os.path.exists(os.getenv("FIREBASE_KEY_PATH", "firebase-key.json")):
     cred = credentials.Certificate(os.getenv("FIREBASE_KEY_PATH", "firebase-key.json"))
-else:
-    # Fallback for deployment where key might be in env var
+
+if not cred:
+    # Fallback for deployment where key might be in individual env vars
     # Note: Handling newlines in private key env var is tricky, usually requires replace
     private_key = os.getenv("FIREBASE_PRIVATE_KEY")
     if private_key:

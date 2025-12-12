@@ -35,7 +35,7 @@ export const chatAPI = {
 };
 
 export const moodAPI = {
-    logMood: (userId, emoji, score) => api.post('/mood/log', { user_id: userId, mood_emoji: emoji, mood_score: score, timestamp: new Date().toISOString() }),
+    logMood: (userId, emoji, score, note = null) => api.post('/mood/log', { user_id: userId, mood_emoji: emoji, mood_score: score, note, timestamp: new Date().toISOString() }),
     getMoodToday: (userId) => api.get(`/mood/today/${userId}`),
     getMoodWeek: (userId) => api.get(`/mood/week/${userId}`),
 };

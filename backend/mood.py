@@ -6,10 +6,13 @@ from collections import defaultdict
 
 router = APIRouter()
 
+from typing import Optional
+
 class MoodLogRequest(BaseModel):
     user_id: str
     mood_emoji: str
     mood_score: int
+    note: Optional[str] = None
     timestamp: str
 
 @router.post("/log")
@@ -67,6 +70,7 @@ async def get_week_moods(user_id: str):
     }
     
     return {
+        "moods": moods, # Return raw data for frontend dashboard
         "week_data": week_data,
         "statistics": stats
     }
