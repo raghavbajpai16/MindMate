@@ -9,13 +9,16 @@ load_dotenv()
 def verify_user(email):
     # Initialize Firebase
     if not firebase_admin._apps:
-        cred_path = os.getenv("FIREBASE_KEY_PATH", "firebase-key.json")
-        if os.path.exists(cred_path):
-            cred = credentials.Certificate(cred_path)
+        firebase_json = os.getenv("FIREBASE_CREDENTIALS_JSON")
+        if firebase_json:
+            import json
+            if "\\n" in firebase_json:
+                firebase_json = firebase_json.replace("\\n", "\n")
+            cred = credentials.Certificate(json.loads(firebase_json))
             firebase_admin.initialize_app(cred)
-            print(f"✅ Firebase initialized with credentials from {cred_path}")
+            print("✅ Firebase initialized from env var")
         else:
-            print(f"❌ Credentials file not found at {cred_path}")
+            print("❌ FIREBASE_CREDENTIALS_JSON not set")
             return
 
     db = firestore.client()

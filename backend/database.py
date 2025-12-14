@@ -9,55 +9,36 @@ load_dotenv()
 import json
 
 # Initialize Firebase
-# Try to load from service account file first (local dev), then env vars (deployment)
-cred = None
+# STRICT MODE: Only load from FIREBASE_CREDENTIALS_JSON env var (Railway/Render friendly)
+firebase_json = os.getenv("FIREBASE_CREDENTIALS_JSON")
 
-# Check for full JSON in env var (Railway/Render friendly)
-# Check for full JSON in env var (Railway/Render friendly)
-if os.getenv("FIREBASE_CREDENTIALS_JSON"):
-    try:
-        json_str = os.getenv("FIREBASE_CREDENTIALS_JSON")
-        # Handle potential double-escaped newlines from some env var injections
-        if "\\n" in json_str:
-            json_str = json_str.replace("\\n", "\n")
-            
-        cred_dict = json.loads(json_str)
-        cred = credentials.Certificate(cred_dict)
-    except Exception as e:
-        print(f"❌ Error loading FIREBASE_CREDENTIALS_JSON: {e}")
+if not firebase_json:
+    # Fail loudly if credentials are missing
+    print("❌ Runtime Error: FIREBASE_CREDENTIALS_JSON environment variable not set.")
+    print("   Please set this variable with the content of your serviceAccountKey.json.")
+    # We raise an error or set db to None depending on preference, but prompt implies strictness.
+    # However, to avoid crashing immediately on import if locally testing without it (though prompt says remove file fallback),
+    # let's try to be helpful. PROMPT SAYS: "If not firebase_json: raise RuntimeError..."
+    # But wait, if I raise RuntimeError on import, the app might crash on startup if variable is missing locally.
+    # The prompt explicitly asked for: 
+    # if not firebase_json: raise RuntimeError("FIREBASE_CREDENTIALS_JSON not set")
+    # So I will do exactly that.
+    raise RuntimeError("FIREBASE_CREDENTIALS_JSON not set")
 
-# Fallback to file if no JSON env var
-if not cred and os.path.exists(os.getenv("FIREBASE_KEY_PATH", "firebase-key.json")):
-    cred = credentials.Certificate(os.getenv("FIREBASE_KEY_PATH", "firebase-key.json"))
+try:
+    # Handle potential double-escaped newlines
+    if "\\n" in firebase_json:
+        firebase_json = firebase_json.replace("\\n", "\n")
+        
+    cred_dict = json.loads(firebase_json)
+    cred = credentials.Certificate(cred_dict)
+    firebase_admin.initialize_app(cred)
+    db = firestore.client()
+    print("✅ Firebase initialized successfully from environment variable")
+except Exception as e:
+    print(f"❌ Failed to initialize Firebase: {e}")
+    raise e
 
-if not cred:
-    # Fallback for deployment where key might be in individual env vars
-    # Note: Handling newlines in private key env var is tricky, usually requires replace
-    private_key = os.getenv("FIREBASE_PRIVATE_KEY")
-    if private_key:
-        private_key = private_key.replace("\\n", "\n")
-        cred = credentials.Certificate(
-            {
-                "type": "service_account",
-                "project_id": os.getenv("FIREBASE_PROJECT_ID"),
-                "private_key_id": "some_id",  # Not strictly needed for init
-                "private_key": private_key,
-                "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
-                "token_uri": "https://oauth2.googleapis.com/token",
-            }
-        )
-
-if cred:
-    try:
-        firebase_admin.initialize_app(cred)
-        db = firestore.client()
-        print("✅ Firebase initialized successfully")
-    except ValueError:
-        # App already initialized
-        db = firestore.client()
-else:
-    print("⚠️ WARNING: Firebase credentials not found. Database operations will fail.")
-    db = None
 
 # --- User Operations ---
 
