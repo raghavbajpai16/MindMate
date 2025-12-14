@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 def verify_user(email):
     # Initialize Firebase
     if not firebase_admin._apps:
@@ -43,11 +44,14 @@ def verify_user(email):
                 print(f"✅ [FIRESTORE] User profile found!")
                 print(f"   - Data: {doc.to_dict()}")
             else:
-                print(f"❌ [FIRESTORE] User profile document does NOT exist for UID {uid}.")
+                print(
+                    f"❌ [FIRESTORE] User profile document does NOT exist for UID {uid}."
+                )
         except Exception as e:
             print(f"❌ [FIRESTORE] Error checking Firestore: {e}")
     else:
         print("ℹ️ Skipping Firestore check because Auth user was not found.")
+
 
 if __name__ == "__main__":
     # Check the email from the screenshot

@@ -9,47 +9,52 @@ from datetime import datetime
 
 router = APIRouter()
 
+
 class ChatRequest(BaseModel):
     user_id: str
     message: str
     model_choice: str = "groq"
 
+
 # --- LLM Callers ---
+
 
 def call_groq(system_prompt, user_message):
     api_key = os.getenv("GROQ_API_KEY")
-    if not api_key: return "Error: Groq API Key missing."
-    
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
+    if not api_key:
+        return "Error: Groq API Key missing."
+
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
     payload = {
         "model": "llama-3.1-8b-instant",
         "messages": [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_message}
+            {"role": "user", "content": user_message},
         ],
         "temperature": 0.7,
-        "max_tokens": 300
+        "max_tokens": 300,
     }
     try:
-        response = requests.post("https://api.groq.com/openai/v1/chat/completions", json=payload, headers=headers)
+        response = requests.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            json=payload,
+            headers=headers,
+        )
         if response.status_code == 200:
             return response.json()["choices"][0]["message"]["content"]
         return f"Groq Error: {response.text}"
     except Exception as e:
         return f"Groq Exception: {str(e)}"
 
+
 def call_gemini(system_prompt, user_message):
     api_key = os.getenv("GEMINI_API_KEY")
-    if not api_key: return "Error: Gemini API Key missing."
-    
+    if not api_key:
+        return "Error: Gemini API Key missing."
+
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={api_key}"
     payload = {
-        "contents": [{
-            "parts": [{"text": f"{system_prompt}\n\nUser: {user_message}"}]
-        }]
+        "contents": [{"parts": [{"text": f"{system_prompt}\n\nUser: {user_message}"}]}]
     }
     try:
         response = requests.post(url, json=payload)
@@ -59,30 +64,33 @@ def call_gemini(system_prompt, user_message):
     except Exception as e:
         return f"Gemini Exception: {str(e)}"
 
+
 def call_chatgpt(system_prompt, user_message):
     api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key: return "Error: OpenAI API Key missing."
-    
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
+    if not api_key:
+        return "Error: OpenAI API Key missing."
+
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
     payload = {
         "model": "gpt-3.5-turbo",
         "messages": [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_message}
-        ]
+            {"role": "user", "content": user_message},
+        ],
     }
     try:
-        response = requests.post("https://api.openai.com/v1/chat/completions", json=payload, headers=headers)
+        response = requests.post(
+            "https://api.openai.com/v1/chat/completions", json=payload, headers=headers
+        )
         if response.status_code == 200:
             return response.json()["choices"][0]["message"]["content"]
         return f"OpenAI Error: {response.text}"
     except Exception as e:
         return f"OpenAI Exception: {str(e)}"
 
+
 # --- Endpoint ---
+
 
 @router.post("/")
 async def chat(request: ChatRequest):
@@ -94,9 +102,9 @@ async def chat(request: ChatRequest):
             "helplines": {
                 "AMICA": "1800-300-0019",
                 "iCall": "1800-389-5146",
-                "VANDREVALA": "1860-2662-345"
+                "VANDREVALA": "1860-2662-345",
             },
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
 
     # 2. Load User Context
@@ -117,22 +125,20 @@ async def chat(request: ChatRequest):
         response_text = call_groq(system_prompt, request.message)
 
     # 5. Save Conversation
-    await save_message(request.user_id, {
-        "type": "user",
-        "content": request.message,
-        "model": request.model_choice
-    })
-    await save_message(request.user_id, {
-        "type": "ai",
-        "content": response_text,
-        "model": request.model_choice
-    })
+    await save_message(
+        request.user_id,
+        {"type": "user", "content": request.message, "model": request.model_choice},
+    )
+    await save_message(
+        request.user_id,
+        {"type": "ai", "content": response_text, "model": request.model_choice},
+    )
 
     # 6. Extract & Update Keywords (Simple implementation)
     # In real app, we'd update the user profile with new keywords
-    
+
     return {
         "response": response_text,
         "is_crisis": False,
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.utcnow().isoformat(),
     }

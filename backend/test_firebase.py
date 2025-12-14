@@ -14,12 +14,12 @@ try:
     # Check if app is already initialized
     if not firebase_admin._apps:
         firebase_admin.initialize_app(cred)
-    
+
     # Test connection
     db = firestore.client()
     doc = db.collection("test").document("test_doc")
     doc.set({"status": "connected", "timestamp": firestore.SERVER_TIMESTAMP})
-    
+
     print("✅ Firebase connection successful!")
 except Exception as e:
     print(f"❌ Firebase connection failed: {e}")

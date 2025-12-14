@@ -32,9 +32,11 @@ app.include_router(chat_router, prefix="/chat", tags=["Chat"])
 app.include_router(mood_router, prefix="/mood", tags=["Mood"])
 app.include_router(user_router, prefix="/user", tags=["User"])
 
+
 @app.get("/")
 def read_root():
     return {"message": "MindMate API is running! 🧠"}
+
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))

@@ -34,6 +34,7 @@ If message contains: "suicide", "kill myself", "hurt myself", "end it all", "wan
 → Show red alert + helplines immediately
 """
 
+
 def get_system_prompt(user_name: str, context: str = "") -> str:
     return f"""{MINDMATE_PERSONALITY}
 

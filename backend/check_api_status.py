@@ -2,6 +2,7 @@ import requests
 import time
 import sys
 
+
 def check_api():
     url = "http://localhost:8000/"
     max_retries = 5
@@ -17,11 +18,12 @@ def check_api():
                 print(f"⚠️ API returned status code: {response.status_code}")
         except requests.exceptions.ConnectionError:
             print("❌ Connection refused. Server might still be starting...")
-        
+
         time.sleep(2)
-    
+
     print("❌ API check failed after multiple attempts.")
     return False
+
 
 if __name__ == "__main__":
     if check_api():
