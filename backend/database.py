@@ -13,9 +13,14 @@ import json
 cred = None
 
 # Check for full JSON in env var (Railway/Render friendly)
+# Check for full JSON in env var (Railway/Render friendly)
 if os.getenv("FIREBASE_CREDENTIALS_JSON"):
     try:
         json_str = os.getenv("FIREBASE_CREDENTIALS_JSON")
+        # Handle potential double-escaped newlines from some env var injections
+        if "\\n" in json_str:
+            json_str = json_str.replace("\\n", "\n")
+            
         cred_dict = json.loads(json_str)
         cred = credentials.Certificate(cred_dict)
     except Exception as e:
