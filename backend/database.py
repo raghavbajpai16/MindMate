@@ -1,10 +1,9 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 import os
-from dotenv import load_dotenv
+
 from datetime import datetime
 
-load_dotenv()
 
 import json
 
