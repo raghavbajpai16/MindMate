@@ -1,11 +1,12 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 import os
-
 from datetime import datetime
-
-
 import json
+
+if os.getenv("ENVIRONMENT") != "production":
+    from dotenv import load_dotenv
+    load_dotenv()
 
 # Initialize Firebase
 # STRICT MODE: Only load from FIREBASE_CREDENTIALS_JSON env var (Railway/Render friendly)
@@ -15,13 +16,6 @@ if not firebase_json:
     # Fail loudly if credentials are missing
     print("❌ Runtime Error: FIREBASE_CREDENTIALS_JSON environment variable not set.")
     print("   Please set this variable with the content of your serviceAccountKey.json.")
-    # We raise an error or set db to None depending on preference, but prompt implies strictness.
-    # However, to avoid crashing immediately on import if locally testing without it (though prompt says remove file fallback),
-    # let's try to be helpful. PROMPT SAYS: "If not firebase_json: raise RuntimeError..."
-    # But wait, if I raise RuntimeError on import, the app might crash on startup if variable is missing locally.
-    # The prompt explicitly asked for: 
-    # if not firebase_json: raise RuntimeError("FIREBASE_CREDENTIALS_JSON not set")
-    # So I will do exactly that.
     raise RuntimeError("FIREBASE_CREDENTIALS_JSON not set")
 
 try:

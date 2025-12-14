@@ -10,7 +10,8 @@ from chat import router as chat_router
 from mood import router as mood_router
 from user import router as user_router
 
-load_dotenv()
+if os.getenv("ENVIRONMENT") != "production":
+    load_dotenv()
 
 app = FastAPI(title="MindMate API", description="AI Mental Wellness Backend")
 
